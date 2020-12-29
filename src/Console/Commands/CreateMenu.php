@@ -104,7 +104,7 @@ class CreateMenu extends Command
         ],[
             'order' => 80,
             'icon' => 'fa-user',
-            'uri' => 'wechat/official-account/users'
+            'uri' => 'wechat/mini-program/users'
         ]);
 
         // 微信支付
