@@ -8,6 +8,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Hanson\LaravelAdminWechat\Actions\DeleteConfig;
 use Hanson\LaravelAdminWechat\Models\WechatConfig;
 use Illuminate\Support\Facades\Cache;
 
@@ -22,7 +23,10 @@ class ConfigController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new WechatConfig);
-
+        $grid->actions(function ($actions){
+            $actions->disableDelete();
+            $actions->add(new DeleteConfig());
+        });
         $grid->column('id', __('ID'))->sortable();
         $grid->column('name', '名称');
         $grid->column('type_readable', '类型');
@@ -36,7 +40,10 @@ class ConfigController extends AdminController
     protected function form()
     {
         $form = new Form(new WechatConfig());
-
+        $form->tools(function (Form\Tools $tools) {
+            // 去掉`删除`按钮
+            $tools->disableDelete();
+        });
         $form->text('name', '名称')->required();
         $form->radio('type', '类型')->default(1)->options([1 => '公众号', 2 => '小程序']);
         $form->text('app_id', 'App id')->required();
@@ -54,7 +61,9 @@ class ConfigController extends AdminController
     protected function detail($id)
     {
         $show = new Show(WechatConfig::findOrFail($id));
-
+        $show->panel()->tools(function ($tools) {
+            $tools->disableDelete();
+        });
         $show->field('name', '名称');
         $show->field('type', '类型')->using([1 => '公众号', 2 => '小程序']);
         $show->field('app_id', 'id');
