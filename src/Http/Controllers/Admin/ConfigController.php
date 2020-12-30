@@ -7,6 +7,7 @@ namespace Hanson\LaravelAdminWechat\Http\Controllers\Admin;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Show;
 use Hanson\LaravelAdminWechat\Models\WechatConfig;
 use Illuminate\Support\Facades\Cache;
 
@@ -48,5 +49,19 @@ class ConfigController extends AdminController
         });
 
         return $form;
+    }
+
+    protected function detail($id)
+    {
+        $show = new Show(WechatConfig::findOrFail($id));
+
+        $show->field('name', '名称');
+        $show->field('type', '类型')->using([1 => '公众号', 2 => '小程序']);
+        $show->field('app_id', 'id');
+        $show->field('secret', '秘钥');
+        $show->field('token', 'Token');
+        $show->field('aes_key', 'Aes Key');
+
+        return $show;
     }
 }
